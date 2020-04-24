@@ -23,15 +23,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var disposable = Disposables.disposed()
-    private val httpClient = OkHttpClient.Builder().build()
-    private val httpUrlBuilder = HttpUrl.Builder()
-        .scheme("https")
-        .host("en.wikipedia.org")
-        .addPathSegment("w")
-        .addPathSegment("api.php")
-        .addQueryParameter("action", "query")
-        .addQueryParameter("format", "json")
-        .addQueryParameter("list", "search")
+    private val httpClient by lazy {
+        OkHttpClient
+            .Builder()
+            .addInterceptor(UserAgentInterceptor(this))
+            .build()
+    }
+
+    private val httpUrlBuilder by lazy {
+        HttpUrl.Builder()
+            .scheme("https")
+            .host("en.wikipedia.org")
+            .addPathSegment("w")
+            .addPathSegment("api.php")
+            .addQueryParameter("action", "query")
+            .addQueryParameter("format", "json")
+            .addQueryParameter("list", "search")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
